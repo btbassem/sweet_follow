@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Utilisateur" table="utilisateur">
+    <indexes>
+      <index name="sexe" columns="sexe"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="entite_utilisateur" columns="entite_utilisateur"/>
+    </unique-constraints>
+    <id name="emailUtilisateur" type="string" column="email_utilisateur" length="255">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="prenomUtilisateur" type="string" column="prenom_utilisateur" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="passwordUtilisateur" type="string" column="password_utilisateur" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="dateNaissanceUtilisateur" type="date" column="date_naissance_utilisateur" nullable="true"/>
+    <field name="origineUtilisateur" type="string" column="origine_utilisateur" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <many-to-one field="entiteUtilisateur" target-entity="Entite" fetch="LAZY">
+      <join-columns>
+        <join-column name="entite_utilisateur" referenced-column-name="id_entite"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="sexe" target-entity="Sexe" fetch="LAZY">
+      <join-columns>
+        <join-column name="sexe" referenced-column-name="nom_sexe"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="idCommentaireAimeCommentaire" target-entity="Commentaire" mapped-by="idUtilisateurAimeCommentaire" fetch="LAZY"/>
+    <many-to-many field="idAmiListeAmis" target-entity="Utilisateur" inversed-by="idUtilisateurListeAmis" fetch="LAZY">
+      <join-table name="liste_amis">
+        <join-columns>
+          <join-column name="id_utilisateur_liste_amis" referenced-column-name="email_utilisateur"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="id_ami_liste_amis" referenced-column-name="email_utilisateur"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+    <many-to-many field="idRecepteurListeAttente" target-entity="Utilisateur" inversed-by="idDemandeurListeAttente" fetch="LAZY">
+      <join-table name="liste_attente">
+        <join-columns>
+          <join-column name="id_demandeur_liste_attente" referenced-column-name="email_utilisateur"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="id_recepteur_liste_attente" referenced-column-name="email_utilisateur"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+    <many-to-many field="idGroupeListeGroupe" target-entity="Groupe" mapped-by="idUtilisateurListeGroupe" fetch="LAZY"/>
+    <many-to-many field="idPageListePage" target-entity="Page" mapped-by="idUtilisateurListePage" fetch="LAZY"/>
+  </entity>
+</doctrine-mapping>

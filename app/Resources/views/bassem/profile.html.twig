@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{asset('/img/LogoSF.png')}}">
+    <link href="{{asset('bootstrap.3.3.6/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
+    <link href="{{asset('font-awesome.4.6.1/css/font-awesome.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/animate.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/timeline.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/cover.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/forms.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/buttons.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/messages1.css')}}" rel="stylesheet">
+    <script src="{{asset('assets/js/jquery.1.11.1.min.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/message.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/remove_notification.js')}}"></script>
+    <title>Sweet Follow</title>
+  </head>
+
+  <body class="animated fadeIn">
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-white navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/home" style="padding-top: 10px;"><img src="/img/LogoSF.png"></a>
+          <a class="navbar-brand" href="/home"><b>Sweet Follow</b></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a 
+              href="/user/{{app.session.get('utilisateur').getEmailUtilisateur}}" 
+              style="padding: 0 10px;">
+                <img class="img-circle" style="height: 41px;" src="/img/Friends/{{app.session.get('entite').getPhotoEntite}}" alt="">
+                {{app.session.get('utilisateur').getPrenomUtilisateur}}
+              </a>
+            </li>
+            <li><a href="/home">Accueil</a></li>
+            <li class="actives"><a href="/messages">Messages</a></li>
+            <li class="dropdown">
+              <a 
+                href="#" 
+                class="dropdown-toggle" 
+                data-toggle="dropdown" 
+                role="button" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                <small class="chat-alert label label-danger" id="notification_number">0</small>
+                Notification 
+                <span class="caret"></span>
+              </a>
+              <div class="dropdown-menu widget-body bordered-top bordered-sky" style="border-width: 3px 0 0 0;max-height: 400px;overflow-y:auto;">
+                <div class="card">
+                  <div class="content">
+                    <ul class="list-unstyled team-members" style="width: 260px;" id="notification_list"></ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Begin page content -->
+    <div class="row page-content">
+    <div class="col-md-8 col-md-offset-2">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="cover profile">
+            <div class="wrapper">
+              <div class="image">
+                <img src="/img/Cover/{{user.getEntiteUtilisateur.getPhotoJournalEntite}}" class="show-in-modal" alt="people">
+              </div>
+              <ul class="friends">
+
+                {% for amis in list_amis %}
+                <li>
+                  <a href="/user/{{amis.email_utilisateur}}">
+                    <img src="/img/Friends/{{amis.photo_entite}}" alt="people" class="img-responsive">
+                  </a>
+                </li>
+                {% endfor %}
+                <li><a href="#" class="group"><i class="fa fa-group"></i></a></li>
+              </ul>
+            </div>
+            <div class="cover-info">
+              <div class="avatar">
+                <img src="/img/Friends/{{user.getEntiteUtilisateur.getPhotoEntite}}" alt="people">
+              </div>
+              
+              <div class="name">
+                <a href="#">
+                  {{user.getPrenomUtilisateur}} 
+                  {{user.getEntiteUtilisateur.getNomEntite}}
+                </a>
+                  {% if user.getEmailUtilisateur == app.session.get('utilisateur').getEmailUtilisateur %}
+                    <!-- NE RIEN FAIRE -->
+                  {% elseif isFriend %}
+                    <a class="btn btn-danger shiny" href="/supprimer_amis/{{user.getEmailUtilisateur}}" 
+                      style="margin-bottom: 10px;font-size: 13px;">Supprimer</a>
+                  {% elseif recepteurAmi %}
+                    <a class="btn btn-success shiny" href="/accepter_amis/{{user.getEmailUtilisateur}}"
+                    style="margin-bottom: 10px;font-size: 13px;">Accepter</a>
+                    <a class="btn btn-warning shiny" href="/ne_pas_accepter_amis/{{user.getEmailUtilisateur}}"
+                    style="margin-bottom: 10px;font-size: 13px;">Annuler</a>
+                  {% elseif demandeurAmi %}
+                    <a class="btn btn-warning shiny" href="/ne_pas_accepter_amis/{{user.getEmailUtilisateur}}"
+                    style="margin-bottom: 10px;font-size: 13px;">Annuler</a>
+                  {% else %}
+                    <a class="btn btn-blue shiny" href="/ajouter_amis/{{user.getEmailUtilisateur}}"
+                    style="margin-bottom: 10px;font-size: 13px;">Ajouter</a>
+                  {% endif %}
+              </div>
+              <ul class="cover-nav">
+                
+                <li><a href="/amis/{{user.getEmailUtilisateur}}/">Amis</a></li>
+                <li><a href="/photo/{{user.getEmailUtilisateur}}/">Photos</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-5">
+          <div class="widget">
+            <div class="widget-header">
+              <h3 class="widget-caption">À propos</h3>
+            </div>
+            <div class="widget-body bordered-top bordered-sky">
+              <ul class="list-unstyled profile-about margin-none">
+                <li class="padding-v-5">
+                  <div class="row">
+                    <div class="col-sm-5"><span class="text-muted">Date de naissance</span></div>
+                    <div class="col-sm-7">{{user.getDateNaissanceUtilisateur|date('d m Y')}}</div>
+                  </div>
+                </li>
+                <li class="padding-v-5">
+                  <div class="row">
+                    <div class="col-sm-5"><span class="text-muted">Habite à</span></div>
+                    <div class="col-sm-7">{{user.getEntiteUtilisateur.getAdresseEntite}}</div>
+                  </div>
+                </li>
+                <li class="padding-v-5">
+                  <div class="row">
+                    <div class="col-sm-5"><span class="text-muted">Ville d'origine</span></div>
+                    <div class="col-sm-7">{{user.getOrigineUtilisateur}}</div>
+                  </div>
+                </li>
+                <li class="padding-v-5">
+                  <div class="row">
+                    <div class="col-sm-5"><span class="text-muted">N° Telephone</span></div>
+                    <div class="col-sm-7">{{user.getEntiteUtilisateur.getNumeroteleEntite}}</div>
+                  </div>
+                </li>
+                <li class="padding-v-5">
+                  <div class="row">
+                    <div class="col-sm-5"><span class="text-muted">Sexe</span></div>
+                    <div class="col-sm-7">{{user.getSexe.getNomSexe}}</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="widget widget-friends">
+            <div class="widget-header">
+              <h3 class="widget-caption">Amis</h3>
+            </div>
+            <div class="widget-body bordered-top  bordered-sky">
+              <div class="row">
+                <div class="col-md-12">
+                  <ul class="img-grid" style="margin: 0 auto;">
+                    {% for amis in list_amis %}
+                      <li>
+                        <a href="/user/{{amis.email_utilisateur}}">
+                          <img src="/img/Friends/{{amis.photo_entite}}" alt="image">
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="widget">
+            <div class="widget-header">
+              <h3 class="widget-caption">Groups</h3>
+            </div>
+            <div class="widget-body bordered-top bordered-sky">
+              <div class="card">
+                <div class="content">
+                  <ul class="list-unstyled team-members">
+                    <li>
+                      <div class="row">
+                          <div class="col-xs-3">
+                              <div class="avatar">
+                                  <img src="/img/Likes/likes-1.png" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                              </div>
+                          </div>
+                          <div class="col-xs-6">
+                             Github
+                          </div>
+              
+                          <div class="col-xs-3 text-right">
+                              <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user"></i></btn>
+                          </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="row">
+                          <div class="col-xs-3">
+                              <div class="avatar">
+                                  <img src="/img/Likes/likes-3.png" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                              </div>
+                          </div>
+                          <div class="col-xs-6">
+                              Css snippets
+                          </div>
+              
+                          <div class="col-xs-3 text-right">
+                              <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user"></i></btn>
+                          </div>
+                      </div>
+                    </li>
+                    <li>
+                      <div class="row">
+                          <div class="col-xs-3">
+                              <div class="avatar">
+                                  <img src="/img/Likes/likes-2.png" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                              </div>
+                          </div>
+                          <div class="col-xs-6">
+                              Html Action
+                          </div>
+              
+                          <div class="col-xs-3 text-right">
+                              <btn class="btn btn-sm btn-azure btn-icon"><i class="fa fa-user"></i></btn>
+                          </div>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>  
+            </div>
+          </div>
+        </div>
+
+        <!--============= timeline posts-->
+        <div class="col-md-7 col-md-22">
+          <div class="row">
+            <!-- left posts-->
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-12">
+
+                <!-- post state form -->
+                <div class="box profile-info n-border-top">
+                  {{ form_start(form_publication) }}
+                    {{ form_errors(form_publication) }}
+                    {{ form_widget(form_publication.contenuPublication) }}
+                    <div class="box-footer box-form">
+                      {{ form_widget(form_publication.poster) }}
+                      <ul class="nav nav-pills">
+                        <li><a href="#"><img src="/img/icones/camera.png"></a></li>
+                        <li><a href="#"><img src="/img/icones/film.png"></a></li>
+                      </ul>
+                    </div>  
+                  {{ form_end(form_publication) }}
+                </div><!-- end post state form -->
+
+
+                  {% for publication in publications %}
+                  <!--   posts -->
+                  <div class="box box-widget">
+                    <div class="box-header with-border">
+                      <div class="user-block">
+                        <img class="img-circle" src="/img/Friends/{{publication.photo_entite}}" alt="User Image">
+                        <span class="username"><a href="/user/{{publication.email_utilisateur}}">{{publication.prenom_utilisateur}} {{publication.nom_entite}}</a>
+                        <span class="text-muted pull-right">
+                        {% if user.getEmailUtilisateur == 
+                        app.session.get('utilisateur').emailUtilisateur %}
+                          <a href="/supprimer_publication/{{publication.id_publication}}">
+                            <img src="/img/icones/remove.png" style="width: 16px !important;height: 16px !important">
+                          </a>
+                        {% endif %} 
+                        </span>
+                        </span>
+                        <span class="description">
+                          <a href="/publication/{{publication.id_publication}}">
+                            {{publication.date_publication}}
+                          </a>
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="box-body" style="display: block;">
+
+                      {% if publication.multimedia_publication != null %}
+                      <img class="img-responsive show-in-modal" src="/img/Post/{{publication.multimedia_publication}}" alt="Photo" style="margin-bottom: 10px;">
+                      {% endif %}
+                      
+                      <p>{{publication.contenu_publication}}</p>
+                      
+                      <!-- CALCULER NOMBRE DE COMMENTAIRES PAS PUBLICATION -->
+                      {% set nbr_commentaire = 0 %}
+                      {% for commentaire in commentaires_amis %}
+                        {% if commentaire.publication_commentaire == publication.id_publication %}
+                          {% set nbr_commentaire = nbr_commentaire + 1 %}
+                        {% endif %}
+                      {% endfor %}
+
+                      <!-- CALCULER NOMBRE DE J'AIMES PAS PUBLICATION -->
+                      {% set nbr_aime = 0 %}
+                      {% for aime in list_aime %}
+                        {% if aime.id_publication_aime_pub == publication.id_publication %}
+                          {% set nbr_aime = aime.nbr_aime %}
+                        {% endif %}
+                      {% endfor %}
+
+                      <!-- TESTER SI UNE PUBLICATION A ETE AIMER PAR MOI POUR AFFICHER SOIT J'AIME SOIT J'AIME PAS -->
+                      {% set pulication_is_liked = false %}
+                      {% for likes in my_likes %}
+                        {% if likes.id_publication_aime_pub == publication.id_publication %}
+                          {% set pulication_is_liked = true %}
+                        {% endif %}
+                      {% endfor %}
+
+                      <a href="/partager/{{publication.id_publication}}" type="button" class="btn btn-default btn-xs">Partager</a>
+                      
+
+                      {% if pulication_is_liked %}
+                        <a href="/ne_pas_aimer/{{publication.id_publication}}" type="button" class="btn btn-azure btn-xs">J'aime pas</a>
+                      {% else %}
+                        <a href="/aimer/{{publication.id_publication}}" type="button" class="btn btn-default btn-xs">J'aime</a>
+                      {% endif %}
+
+                      <span class="pull-right text-muted">
+                        {% if nbr_aime == 0 %} {{nbr_aime}} J'aime {% else %} 
+                          <a href="/aime_publication_users/{{publication.id_publication}}">{{nbr_aime}} J'aime</a>
+                        {% endif %} 
+                         - {{nbr_commentaire}} Commentaires
+                      </span>
+                    </div>
+
+                    <div class="box-footer box-comments" style="display: block;">
+                      {% for commentaire in commentaires_amis %}
+                      {% if commentaire.publication_commentaire == publication.id_publication %}
+                        <div class="box-comment">
+                          <img class="img-circle img-sm" src="/img/Friends/{{commentaire.photo_entite}}" alt="User Image">
+                          <div class="comment-text">
+                            <span class="username">
+                              <a href="/user/{{commentaire.email_utilisateur}}">
+                            {{commentaire.prenom_utilisateur}} {{commentaire.nom_entite}}
+                              </a>
+                              <span class="text-muted">
+                                {{commentaire.date_commentaire}}
+                              </span>
+                              
+                              <span class="text-muted pull-right">
+                                {% if commentaire.admin_commentaire == 
+                                app.session.get('utilisateur').emailUtilisateur %}
+                                  <a href="/supprimer_commentaire/{{commentaire.id_commentaire}}">
+                                    <img src="/img/icones/remove.png" style="width: 16px !important;height: 16px !important">
+                                  </a>
+                                {% endif %} 
+                              </span>
+                            </span>
+                            {{commentaire.contenu_commentaire}}
+                          </div>
+                        </div>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+                    <div class="box-footer" style="display: block;">
+                      <form action="/ajouter_commentaire/{{publication.id_publication}}/" method="POST">
+                        <img class="img-responsive img-circle img-sm" src="/img/Friends/{{app.session.get('entite').getPhotoEntite}}" alt="Alt Text">
+                        <div class="img-push">
+                          <input name="commentaire" type="text" class="form-control input-sm" placeholder="Press enter to post comment">
+                        </div>
+                      </form>
+                    </div>
+                  </div><!--  end posts-->
+                  {% endfor %}
+
+
+                </div>
+              </div>
+            </div><!-- end left posts-->
+          </div>
+        </div><!-- end timeline posts-->
+      </div>
+    </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalShow" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          </div>
+          <div class="modal-body text-centers">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer" style="position : relative">
+      <div class="container">
+        <p class="text-muted"> Copyright &copy; Company - All rights reserved </p>
+      </div>
+    </footer>
+    <input type="hidden" id="user1" value="{{app.session.get('utilisateur').getEmailUtilisateur}}">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  </body>
+</html>

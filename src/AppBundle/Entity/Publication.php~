@@ -1,0 +1,57 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Publication
+ *
+ * @ORM\Table(name="publication", indexes={@ORM\Index(name="proprietaire_publication", columns={"admin_publication"})})
+ * @ORM\Entity
+ */
+class Publication
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="contenu_publication", type="text", length=65535, nullable=false)
+     */
+    private $contenuPublication;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_publication", type="datetime", nullable=false)
+     */
+    private $datePublication = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="multimedia_publication", type="string", length=255, nullable=false)
+     */
+    private $multimediaPublication;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_publication", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idPublication;
+
+    /**
+     * @var \AppBundle\Entity\Entite
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Entite")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="admin_publication", referencedColumnName="id_entite")
+     * })
+     */
+    private $adminPublication;
+
+
+}
+

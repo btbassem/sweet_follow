@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{asset('/img/LogoSF.png')}}">
+    <link href="{{asset('bootstrap.3.3.6/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
+    <link href="{{asset('font-awesome.4.6.1/css/font-awesome.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/animate.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/timeline.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/cover.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/forms.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/buttons.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/messages1.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/friends.css')}}" rel="stylesheet">
+    <script src="{{asset('assets/js/jquery.1.11.1.min.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/message.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/remove_notification.js')}}"></script>
+    <title>Sweet Follow</title>
+  </head>
+
+  <body class="animated fadeIn">
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-white navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/home" style="padding-top: 10px;"><img src="/img/LogoSF.png"></a>
+          <a class="navbar-brand" href="/home"><b>Sweet Follow</b></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a 
+              href="/user/{{app.session.get('utilisateur').getEmailUtilisateur}}" 
+              style="padding: 0 10px;">
+                <img class="img-circle" style="height: 41px;" src="/img/Friends/{{app.session.get('entite').getPhotoEntite}}" alt="">
+                {{app.session.get('utilisateur').getPrenomUtilisateur}}
+              </a>
+            </li>
+            <li><a href="/home">Accueil</a></li>
+            <li class="actives"><a href="/messages">Messages</a></li>
+            <li class="dropdown">
+              <a 
+                href="#" 
+                class="dropdown-toggle" 
+                data-toggle="dropdown" 
+                role="button" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                <small class="chat-alert label label-danger" id="notification_number">0</small>
+                Notification 
+                <span class="caret"></span>
+              </a>
+              <div class="dropdown-menu widget-body bordered-top bordered-sky" style="border-width: 3px 0 0 0;max-height: 400px;overflow-y:auto;">
+                <div class="card">
+                  <div class="content">
+                    <ul class="list-unstyled team-members" style="width: 260px;" id="notification_list"></ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Begin page content -->
+    <div class="row page-content">
+      <div class="col-md-8 col-md-offset-2">
+        <div class="row">
+          
+          {% for users in aime_publication_users %}
+          <div class="col-md-4">
+              <div class="contact-box center-version">
+                <a href="/user/{{users.email_utilisateur}}">
+                  <img alt="image" class="img-circle" src="/img/Friends/{{users.photo_entite}}">
+                  <h3 class="m-b-xs"><strong>{{users.prenom_utilisateur}} {{users.nom_entite}}</strong></h3>
+    
+                  <div class="font-bold">{{users.adresse_entite}}</div>
+                </a>
+                <div class="contact-box-footer">
+                  <div class="m-t-xs btn-group">
+                    <a href="/messages/{{users.email_utilisateur}}" class="btn btn-xs btn-white"><i class="fa fa-envelope"></i>Envoyer Message</a>
+                    <a class="btn btn-xs btn-white" href="/ajouter_amis/{{users.email_utilisateur}}"><i class="fa fa-user-plus"></i> Ajouter Amis</a>
+                  </div>
+                </div>
+              </div>
+          </div>
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer" style="position: fixed; !important">
+      <div class="container">
+        <p class="text-muted"> Copyright &copy; Company - All rights reserved </p>
+      </div>
+    </footer>
+    <input type="hidden" id="user1" value="{{app.session.get('utilisateur').getEmailUtilisateur}}">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  </body>
+</html>

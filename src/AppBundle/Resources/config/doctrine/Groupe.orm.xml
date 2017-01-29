@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Groupe" table="groupe">
+    <indexes>
+      <index name="proprietaire_groupe" columns="admin_groupe"/>
+      <index name="confidentialite_groupe" columns="confidentialite_groupe"/>
+      <index name="nature_groupe" columns="nature_groupe"/>
+    </indexes>
+    <unique-constraints>
+      <unique-constraint name="entite_groupe" columns="entite_groupe"/>
+    </unique-constraints>
+    <id name="idGroupe" type="integer" column="id_groupe">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <many-to-one field="adminGroupe" target-entity="Utilisateur" fetch="LAZY">
+      <join-columns>
+        <join-column name="admin_groupe" referenced-column-name="email_utilisateur"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="confidentialiteGroupe" target-entity="Confidentialite" fetch="LAZY">
+      <join-columns>
+        <join-column name="confidentialite_groupe" referenced-column-name="nom_confidentialité"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="natureGroupe" target-entity="NatureGroupe" fetch="LAZY">
+      <join-columns>
+        <join-column name="nature_groupe" referenced-column-name="nom_nature_groupe"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-one field="entiteGroupe" target-entity="Entite" fetch="LAZY">
+      <join-columns>
+        <join-column name="entite_groupe" referenced-column-name="id_entite"/>
+      </join-columns>
+    </many-to-one>
+    <many-to-many field="idUtilisateurListeGroupe" target-entity="Utilisateur" inversed-by="idGroupeListeGroupe" fetch="LAZY">
+      <join-table name="liste_groupe">
+        <join-columns>
+          <join-column name="id_groupe_liste_groupe" referenced-column-name="id_groupe"/>
+        </join-columns>
+        <inverse-join-columns>
+          <join-column name="id_utilisateur_liste_groupe" referenced-column-name="email_utilisateur"/>
+        </inverse-join-columns>
+      </join-table>
+    </many-to-many>
+  </entity>
+</doctrine-mapping>

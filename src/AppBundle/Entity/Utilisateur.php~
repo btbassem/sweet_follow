@@ -1,0 +1,136 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Utilisateur
+ *
+ * @ORM\Table(name="utilisateur", uniqueConstraints={@ORM\UniqueConstraint(name="entite_utilisateur", columns={"entite_utilisateur"})}, indexes={@ORM\Index(name="sexe", columns={"sexe"})})
+ * @ORM\Entity
+ */
+class Utilisateur
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="prenom_utilisateur", type="string", length=255, nullable=false)
+     */
+    private $prenomUtilisateur;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="password_utilisateur", type="string", length=255, nullable=false)
+     */
+    private $passwordUtilisateur;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_naissance_utilisateur", type="date", nullable=true)
+     */
+    private $dateNaissanceUtilisateur;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="origine_utilisateur", type="string", length=255, nullable=true)
+     */
+    private $origineUtilisateur;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email_utilisateur", type="string", length=255)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $emailUtilisateur;
+
+    /**
+     * @var \AppBundle\Entity\Entite
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Entite")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="entite_utilisateur", referencedColumnName="id_entite")
+     * })
+     */
+    private $entiteUtilisateur;
+
+    /**
+     * @var \AppBundle\Entity\Sexe
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Sexe")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="sexe", referencedColumnName="nom_sexe")
+     * })
+     */
+    private $sexe;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Commentaire", mappedBy="idUtilisateurAimeCommentaire")
+     */
+    private $idCommentaireAimeCommentaire;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Utilisateur", inversedBy="idUtilisateurListeAmis")
+     * @ORM\JoinTable(name="liste_amis",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="id_utilisateur_liste_amis", referencedColumnName="email_utilisateur")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="id_ami_liste_amis", referencedColumnName="email_utilisateur")
+     *   }
+     * )
+     */
+    private $idAmiListeAmis;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Utilisateur", inversedBy="idDemandeurListeAttente")
+     * @ORM\JoinTable(name="liste_attente",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="id_demandeur_liste_attente", referencedColumnName="email_utilisateur")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="id_recepteur_liste_attente", referencedColumnName="email_utilisateur")
+     *   }
+     * )
+     */
+    private $idRecepteurListeAttente;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Groupe", mappedBy="idUtilisateurListeGroupe")
+     */
+    private $idGroupeListeGroupe;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Page", mappedBy="idUtilisateurListePage")
+     */
+    private $idPageListePage;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->idCommentaireAimeCommentaire = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->idAmiListeAmis = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->idRecepteurListeAttente = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->idGroupeListeGroupe = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->idPageListePage = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+}
+

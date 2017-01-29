@@ -1,0 +1,68 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Entite
+ *
+ * @ORM\Table(name="entite")
+ * @ORM\Entity
+ */
+class Entite
+{
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nom_entite", type="string", length=255, nullable=false)
+     */
+    private $nomEntite;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="photo_entite", type="string", length=255, nullable=false)
+     */
+    private $photoEntite = 'default.png';
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="photo_journal_entite", type="string", length=255, nullable=false)
+     */
+    private $photoJournalEntite = 'default.jpg';
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_creation_entite", type="date", nullable=true)
+     */
+    private $dateCreationEntite;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="adresse_entite", type="string", length=255, nullable=true)
+     */
+    private $adresseEntite;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="numero_tele_entite", type="integer", nullable=true)
+     */
+    private $numeroTeleEntite;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_entite", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idEntite;
+
+
+}
+

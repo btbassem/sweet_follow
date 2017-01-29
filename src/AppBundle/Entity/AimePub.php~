@@ -1,0 +1,53 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * AimePub
+ *
+ * @ORM\Table(name="aime_pub", indexes={@ORM\Index(name="emoji_aime_pub", columns={"emoji_aime_pub"}), @ORM\Index(name="aime_pub_ibfk_4", columns={"id_utilisateur_aime_pub"}), @ORM\Index(name="IDX_B49E68A097096C55", columns={"id_publication_aime_pub"})})
+ * @ORM\Entity
+ */
+class AimePub
+{
+    /**
+     * @var \AppBundle\Entity\Publication
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Publication")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_publication_aime_pub", referencedColumnName="id_publication")
+     * })
+     */
+    private $idPublicationAimePub;
+
+    /**
+     * @var \AppBundle\Entity\Emoji
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Emoji")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="emoji_aime_pub", referencedColumnName="nom")
+     * })
+     */
+    private $emojiAimePub;
+
+    /**
+     * @var \AppBundle\Entity\Utilisateur
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="AppBundle\Entity\Utilisateur")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_utilisateur_aime_pub", referencedColumnName="email_utilisateur")
+     * })
+     */
+    private $idUtilisateurAimePub;
+
+
+}
+

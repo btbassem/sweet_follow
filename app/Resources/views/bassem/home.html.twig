@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{asset('/img/LogoSF.png')}}">
+    <link href="{{asset('bootstrap.3.3.6/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="http://getbootstrap.com/assets/css/docs.min.css" rel="stylesheet">
+    <link href="{{asset('font-awesome.4.6.1/css/font-awesome.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/animate.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/timeline.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/cover.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/forms.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/buttons.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/messages1.css')}}" rel="stylesheet">
+    <script src="{{asset('assets/js/jquery.1.11.1.min.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/message.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/remove_notification.js')}}"></script>
+    <title>Sweet Follow</title>
+  </head>
+
+  <body class="animated fadeIn">
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-white navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/home" style="padding-top: 10px;"><img src="/img/LogoSF.png"></a>
+          <a class="navbar-brand" href="/home"><b>Sweet Follow</b></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a 
+              href="/user/{{app.session.get('utilisateur').getEmailUtilisateur}}" 
+              style="padding: 0 10px;">
+                <img class="img-circle" style="height: 41px;" src="/img/Friends/{{app.session.get('entite').getPhotoEntite}}" alt="">
+                {{app.session.get('utilisateur').getPrenomUtilisateur}}
+              </a>
+            </li>
+            <li><a href="/home">Accueil</a></li>
+            <li class="actives"><a href="/messages">Messages</a></li>
+            <li class="dropdown">
+              <a 
+                href="#" 
+                class="dropdown-toggle" 
+                data-toggle="dropdown" 
+                role="button" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                <small class="chat-alert label label-danger" id="notification_number">0</small>
+                Notification 
+                <span class="caret"></span>
+              </a>
+              <div class="dropdown-menu widget-body bordered-top bordered-sky" style="border-width: 3px 0 0 0;max-height: 400px;overflow-y:auto;">
+                <div class="card">
+                  <div class="content">
+                    <ul class="list-unstyled team-members" style="width: 260px;" id="notification_list"></ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Begin page content -->
+    <div class="container page-content ">
+      <div class="row">
+        <!-- left links -->
+        <div class="col-md-3">
+          <div class="profile-nav">
+            <div class="widget">
+              <div class="widget-body">
+                <div class="user-heading round">
+                  <a href="#">
+                      <img src="/img/Friends/{{app.session.get('entite').getPhotoEntite}}" alt="">
+                  </a>
+                  <h1>{{app.session.get('utilisateur').getPrenomUtilisateur}} {{app.session.get('entite').getNomEntite}}</h1>
+                </div>
+
+                <ul class="nav nav-pills nav-stacked">
+                  <li>
+                    <a href="/messages"> 
+                      <i class="fa fa-envelope"></i> Messages 
+                    </a>
+                  </li>
+                  <li><a href="/evenements"> <i class="fa fa-calendar"></i> Events</a></li>
+                  <li><a href="/photo"> <i class="fa fa-image"></i> Photos</a></li>
+                  <li><a href="/pages"> <i class="fa fa-globe"></i> Pages</a></li>
+                  <li><a href="/jeux"> <i class="fa fa-gamepad"></i> Games</a></li>
+                  <li><a href="/groupes"> <i class="fa fa-users"></i> Groups</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div><!-- end left links -->
+
+
+        <!-- center posts -->
+        <div class="col-md-6">
+          <div class="row">
+            <!-- left posts-->
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col-md-12">
+                
+                  {% for publication in publications_amis %}
+                  <!--   posts -->
+                  <div class="box box-widget">
+                    <div class="box-header with-border">
+                      <div class="user-block">
+                        <img class="img-circle" src="/img/Friends/{{publication.photo_entite}}" alt="User Image">
+                        <span class="username"><a href="/user/{{publication.email_utilisateur}}">{{publication.prenom_utilisateur}} {{publication.nom_entite}}</a>
+                        </span>
+                        <span class="description">publier le {{publication.date_publication}}</span>
+                      </div>
+                    </div>
+
+                    <div class="box-body" style="display: block;">
+
+                      {% if publication.multimedia_publication != null %}
+                      <img class="img-responsive show-in-modal" src="/img/Post/{{publication.multimedia_publication}}" alt="Photo" style="margin-bottom: 10px;">
+                      {% endif %}
+                      
+                      <p>{{publication.contenu_publication}}</p>
+                      
+                      <!-- CALCULER NOMBRE DE COMMENTAIRES PAS PUBLICATION -->
+                      {% set nbr_commentaire = 0 %}
+                      {% for commentaire in commentaires_amis %}
+                        {% if commentaire.publication_commentaire == publication.id_publication %}
+                          {% set nbr_commentaire = nbr_commentaire + 1 %}
+                        {% endif %}
+                      {% endfor %}
+
+                      <!-- CALCULER NOMBRE DE J'AIMES PAS PUBLICATION -->
+                      {% set nbr_aime = 0 %}
+                      {% for aime in list_aime %}
+                        {% if aime.id_publication_aime_pub == publication.id_publication %}
+                          {% set nbr_aime = aime.nbr_aime %}
+                        {% endif %}
+                      {% endfor %}
+
+                      <!-- TESTER SI UNE PUBLICATION A ETE AIMER PAR MOI POUR AFFICHER SOIT J'AIME SOIT J'AIME PAS -->
+                      {% set pulication_is_liked = false %}
+                      {% for likes in my_likes %}
+                        {% if likes.id_publication_aime_pub == publication.id_publication %}
+                          {% set pulication_is_liked = true %}
+                        {% endif %}
+                      {% endfor %}
+
+                      <a href="/partager/{{publication.id_publication}}" type="button" class="btn btn-default btn-xs">Partager</a>
+                      
+
+                      {% if pulication_is_liked %}
+                        <a href="/ne_pas_aimer/{{publication.id_publication}}" type="button" class="btn btn-azure btn-xs">J'aime pas</a>
+                      {% else %}
+                        <a href="/aimer/{{publication.id_publication}}" type="button" class="btn btn-default btn-xs">J'aime</a>
+                      {% endif %}
+
+                      <span class="pull-right text-muted">
+                        {% if nbr_aime == 0 %} {{nbr_aime}} J'aime {% else %} 
+                          <a href="/aime_publication_users/{{publication.id_publication}}">{{nbr_aime}} J'aime</a>
+                        {% endif %} 
+                         - {{nbr_commentaire}} Commentaires
+                      </span>
+                    </div>
+
+                    <div class="box-footer box-comments" style="display: block;">
+                      {% for commentaire in commentaires_amis %}
+                      {% if commentaire.publication_commentaire == publication.id_publication %}
+                        <div class="box-comment">
+                          <img class="img-circle img-sm" src="/img/Friends/{{commentaire.photo_entite}}" alt="User Image">
+                          <div class="comment-text">
+                            <span class="username">
+                              <a href="/user/{{commentaire.email_utilisateur}}">
+                            {{commentaire.prenom_utilisateur}} {{commentaire.nom_entite}}
+                              </a>
+                              <span class="text-muted">
+                                {{commentaire.date_commentaire}}
+                              </span>
+                              
+                              <span class="text-muted pull-right">
+                                {% if commentaire.admin_commentaire == 
+                                app.session.get('utilisateur').emailUtilisateur %}
+                                  <a href="/supprimer_commentaire/{{commentaire.id_commentaire}}">
+                                    <img src="/img/icones/remove.png" style="width: 16px !important;height: 16px !important">
+                                  </a>
+                                {% endif %} 
+                              </span>
+                            </span>
+                            {{commentaire.contenu_commentaire}}
+                          </div>
+                        </div>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+                    <div class="box-footer" style="display: block;">
+                      <form action="/ajouter_commentaire/{{publication.id_publication}}/" method="POST">
+                        <img class="img-responsive img-circle img-sm" src="/img/Friends/{{app.session.get('entite').getPhotoEntite}}" alt="Alt Text">
+                        <div class="img-push">
+                          <input name="commentaire" type="text" class="form-control input-sm" placeholder="Press enter to post comment">
+                        </div>
+                      </form>
+                    </div>
+                  </div><!--  end posts-->
+                  {% endfor %}
+
+                </div>
+              </div>
+            </div><!-- end left posts-->
+          </div>
+        </div><!-- end  center posts -->
+
+
+
+
+        <!-- right posts -->
+        <div class="col-md-3">
+          <!-- Friends activity -->
+          <div class="widget">
+            <div class="widget-header">
+              <h3 class="widget-caption">Activité de vos amis</h3>
+            </div>
+            <div class="widget-body bordered-top bordered-sky">
+              <div class="card">
+                <div class="content">
+                   <ul class="list-unstyled team-members">
+                    {% for activity in activity_amis %}
+                    <li>
+                      <div class="row">
+                        <div class="col-xs-3">
+                            <div class="avatar">
+                                <img src="/img/Friends/{{activity.photo_entite}}" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                            </div>
+                        </div>
+                        <div class="col-xs-9">
+                          <b><a href="/user/{{activity.email_utilisateur}}">{{activity.prenom_utilisateur}} {{activity.nom_entite}}</a></b> a partagé 
+                          <b><a href="/publication/{{activity.id_publication}}">publication</a></b>. 
+                          <span class="timeago" >il y a {{activity.date_publication}} {{activity.format_date}} </span>
+                        </div>
+                      </div>
+                    </li>
+                    {% endfor %}
+                  </ul>         
+                </div>
+              </div>
+            </div>
+          </div><!-- End Friends activity -->
+
+          <!-- People You May Know -->
+          <div class="widget">
+            <div class="widget-header">
+              <h3 class="widget-caption">Connaissez-vous...</h3>
+            </div>
+            <div class="widget-body bordered-top bordered-sky">
+              <div class="card">
+                  <div class="content">
+                      <ul class="list-unstyled team-members">
+                          {% for user in connaissez_vous %}
+                          <li>
+                              <div class="row">
+                                  <div class="col-xs-3">
+                                    <a href="/user/{{user.email_utilisateur}}">
+                                      <div class="avatar">
+                                          <img src="/img/Friends/{{user.photo_entite}}" alt="Circle Image" class="img-circle img-no-padding img-responsive">
+                                      </div>
+                                    </a>
+                                  </div>
+                                  <div class="col-xs-6">
+                                    <b>
+                                      <a href="/user/{{user.email_utilisateur}}">{{user.prenom_utilisateur}} {{user.nom_entite}}</a>
+                                    </b>
+                                    De {{user.origine_utilisateur}}
+                                  </div>
+                                  <div class="col-xs-3 text-right">
+                                      <a href="/ajouter_amis/{{user.email_utilisateur}}" class="btn btn-sm btn-azure btn-icon">
+                                        <i class="fa"><b>+</b></i>
+                                      </a>
+                                  </div>
+                              </div>
+                          </li>
+                          {% endfor %}
+                      </ul>
+                  </div>
+              </div>          
+            </div>
+          </div><!-- End people yout may know --> 
+        </div><!-- end right posts -->
+      </div>
+    </div>
+    <footer class="footer" style="position : relative">
+      <div class="container">
+        <p class="text-muted"> Copyright &copy; Company - All rights reserved </p>
+      </div>
+    </footer>
+    <input type="hidden" id="user1" value="{{app.session.get('utilisateur').getEmailUtilisateur}}">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  </body>
+</html>

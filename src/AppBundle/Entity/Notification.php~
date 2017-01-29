@@ -1,0 +1,70 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Notification
+ *
+ * @ORM\Table(name="notification", indexes={@ORM\Index(name="id_utilisateur_notification", columns={"acteur_notification"}), @ORM\Index(name="id_publication_notification", columns={"id_publication_notification"}), @ORM\Index(name="type_notification", columns={"type_notification"})})
+ * @ORM\Entity
+ */
+class Notification
+{
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_notification", type="datetime", nullable=false)
+     */
+    private $dateNotification = 'CURRENT_TIMESTAMP';
+
+    /**
+     * @var boolean
+     *
+     * @ORM\Column(name="etat_notification", type="boolean", nullable=false)
+     */
+    private $etatNotification = '0';
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id_notification_notification", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $idNotificationNotification;
+
+    /**
+     * @var \AppBundle\Entity\Utilisateur
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Utilisateur")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="acteur_notification", referencedColumnName="email_utilisateur")
+     * })
+     */
+    private $acteurNotification;
+
+    /**
+     * @var \AppBundle\Entity\Publication
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Publication")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_publication_notification", referencedColumnName="id_publication")
+     * })
+     */
+    private $idPublicationNotification;
+
+    /**
+     * @var \AppBundle\Entity\TypeNotification
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\TypeNotification")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="type_notification", referencedColumnName="nom_type")
+     * })
+     */
+    private $typeNotification;
+
+
+}
+

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping http://doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+  <entity name="AppBundle\Entity\Entite" table="entite">
+    <id name="idEntite" type="integer" column="id_entite">
+      <generator strategy="IDENTITY"/>
+    </id>
+    <field name="nomEntite" type="string" column="nom_entite" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="photoEntite" type="string" column="photo_entite" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">default.png</option>
+      </options>
+    </field>
+    <field name="photoJournalEntite" type="string" column="photo_journal_entite" length="255" nullable="false">
+      <options>
+        <option name="fixed"/>
+        <option name="default">default.jpg</option>
+      </options>
+    </field>
+    <field name="dateCreationEntite" type="date" column="date_creation_entite" nullable="true"/>
+    <field name="adresseEntite" type="string" column="adresse_entite" length="255" nullable="true">
+      <options>
+        <option name="fixed"/>
+      </options>
+    </field>
+    <field name="numeroTeleEntite" type="integer" column="numero_tele_entite" nullable="true">
+      <options>
+        <option name="unsigned"/>
+      </options>
+    </field>
+  </entity>
+</doctrine-mapping>

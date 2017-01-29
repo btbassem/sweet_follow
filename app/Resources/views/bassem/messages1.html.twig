@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="{{asset('/img/LogoSF.png')}}">
+    <link href="{{asset('bootstrap.3.3.6/css/bootstrap.min.css')}}" rel="stylesheet">
+    <link href="{{asset('font-awesome.4.6.1/css/font-awesome.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/animate.min.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/timeline.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/cover.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/forms.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/buttons.css')}}" rel="stylesheet">
+    <link href="{{asset('assets/css/messages1.css')}}" rel="stylesheet">
+    <script src="{{asset('assets/js/jquery.1.11.1.min.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/bootstrap.min.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/message.js')}}"></script>
+    <script src="{{asset('bootstrap.3.3.6/js/remove_notification.js')}}"></script>
+    <title>Sweet Follow chat</title>
+  </head>
+
+  <body>
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-white navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/home" style="padding-top: 10px;"><img src="/img/LogoSF.png"></a>
+          <a class="navbar-brand" href="/home"><b>Sweet Follow</b></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a 
+              href="/user/{{app.session.get('utilisateur').getEmailUtilisateur}}" 
+              style="padding: 0 10px;">
+                <img class="img-circle" style="height: 41px;" src="/img/Friends/{{app.session.get('entite').getPhotoEntite}}" alt="">
+                {{app.session.get('utilisateur').getPrenomUtilisateur}}
+              </a>
+            </li>
+            <li><a href="/home">Accueil</a></li>
+            <li class="actives"><a href="/messages">Messages</a></li>
+            <li class="dropdown">
+              <a 
+                id="remove_notification"
+                href="#" 
+                class="dropdown-toggle" 
+                data-toggle="dropdown" 
+                role="button" 
+                aria-haspopup="true" 
+                aria-expanded="false">
+                <small class="chat-alert label label-danger" id="notification_number">0</small>
+                Notification 
+                <span class="caret"></span>
+              </a>
+              <div class="dropdown-menu widget-body bordered-top bordered-sky" style="border-width: 3px 0 0 0;max-height: 400px;overflow-y:auto;">
+                <div class="card">
+                  <div class="content">
+                    <ul class="list-unstyled team-members" style="width: 260px;" id="notification_list"></ul>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+      <!-- Begin page content -->
+    <div class="container page-content">
+      <div class="row">
+        <div class="col-md-4 bg-white" style="height: 484px;overflow-y:auto ">
+
+          <div class="box-header with-border">
+            <h4>Vos Amis</h4>
+          </div>
+          <!-- member list -->
+          <ul class="friend-list widget-body bordered-top bordered-sky" id="list_amis_div" style="margin-left: 0;">
+          {% for amis in list_amis %}
+            {% if user2 == amis.email_utilisateur %}
+              <li class="active animated bounceInDown">
+                <a href="./{{amis.email_utilisateur}}" class="clearfix">
+                  <img src="/img/Friends/{{amis.photo_entite}}" alt="" class="img-circle">
+                  <div class="friend-name">
+                    <h4>{{amis.prenom_utilisateur}} {{amis.nom_entite}} </h4>
+                  </div>
+                </a>
+              </li>
+            {% else %}
+              <li>
+                <a href="./{{amis.email_utilisateur}}" class="clearfix">
+                  <img src="/img/Friends/{{amis.photo_entite}}" alt="" class="img-circle">
+                  <div class="friend-name">
+                    <h4>{{amis.prenom_utilisateur}} {{amis.nom_entite}} </h4>
+                  </div>
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+          </ul>
+        </div>  
+        <!-- selected chat -->
+        <div class="col-md-8 bg-white ">
+          <div class="chat-message" id="divtoscroll" style="height: 450px;overflow-y:auto;padding:20px">
+            <ul class="chat" id="chat">
+              {% for message in old_messages %}
+                {% if (app.session.get('utilisateur').getEmailUtilisateur == message.expediteur_message) and (message.recepteur_message == user2)  %}
+                <li class="right clearfix">
+                  <span class="chat-img pull-right">
+                  <img src="/img/Friends/{{message.photo_entite}}" alt="User Avatar">
+                </span>
+                <div class="chat-body clearfix">
+                  <div class="header">
+                    <strong class="primary-font">{{message.prenom_utilisateur}}</strong>
+                    <small class="pull-right text-muted">
+                      {{message.date_message}}
+                      </small>
+                    </div>
+                    <p> {{message.contenu_message|raw}} </p>
+                  </div>
+                </li>
+                {% endif %}
+                {% if (app.session.get('utilisateur').getEmailUtilisateur == message.recepteur_message) and (message.expediteur_message == user2)  %}
+                <li class="left clearfix">
+                  <span class="chat-img pull-left">
+                  <img src="/img/Friends/{{message.photo_entite}}" alt="User Avatar">
+                </span>
+                <div class="chat-body clearfix">
+                  <div class="header">
+                    <strong class="primary-font">{{message.prenom_utilisateur}}</strong>
+                    <small class="pull-right text-muted">
+                      {{message.date_message}}
+                    </small>
+                    </div>
+                    <p> {{message.contenu_message|raw}} </p>
+                  </div>
+                </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+          <form id="send-message" >
+            <div class="chat-box_ bg-white">
+              <div class="input-group">
+                <input class="form-control border no-shadow no-rounded" placeholder="Type your message here" id="message" ></input>
+                <span class="input-group-btn">
+                  <input class="btn btn-success no-rounded" type="submit">Send</input>
+                </span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <footer class="footer">
+      <div class="container">
+        <p class="text-muted"> Copyright &copy; Sweet Follow - All rights reserved </p>
+      </div>
+    </footer>
+    <input type="hidden" id="user1" value="{{app.session.get('utilisateur').getEmailUtilisateur}}">
+    <input type="hidden" id="user2" value="{{user2}}">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+  </body>
+</html>
