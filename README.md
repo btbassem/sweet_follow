@@ -1,1 +1,10 @@
-# sweet_follow
+WEB APPLICATION
+NAME : SWEET FOLLOW
+TYPE : Social media
+TECHNOLOGY : SYMFONY 3.1 + NODEJS
+VERSION : BETA
+
+Team : 
+BEN TILI BASSEM (developper)
+SAFA ZEDDINI (developper)
+ANAS SAOUDI (designer)
